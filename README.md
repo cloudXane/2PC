@@ -9,3 +9,6 @@ on implementation [details](https://github.com/cloudXane/2PC/blob/master/notes/D
 ### README
 on how to [config and run](https://github.com/cloudXane/2PC/blob/master/notes/README).
 
+### TODO
+1) Implement the Termination Protocol among AppServers;
+2) Change the communication mode between TM and client: multithread -> event-driven
