@@ -46,7 +46,7 @@ public class TManager {
 	 * of transcation operations like Transfer */
 	Map<String, Operation>  ops;
 
-	private TCoordinator () {
+	private TCoordinator() {
 	    trans   = new ConcurrentLinkedQueue<DTran>();
 
 	    appsvrs = new ConcurrentHashMap<String, AppSvrClt>(3);
@@ -108,7 +108,7 @@ public class TManager {
 	public void run() {
 
 	    /* get next transaction and execute it */
-	    while (true) {
+	    for (;;) {
 		/* queue is synchronized */
 		if (! trans.isEmpty()) {
 
@@ -138,8 +138,7 @@ public class TManager {
 
 	    /* SEND params and RECV voting result */
 	    dt.submit(vr);
-	    LOG2PC.info("START-2PC " + dt.getID() + "\n" 
-		    + dt);
+	    LOG2PC.info("START-2PC " + dt.getID() + "\n" + dt);
 
 	    try {
 		/* if voting count is smaller than workerNum 
@@ -150,14 +149,12 @@ public class TManager {
 
 		/* SEND voting decision and RECV ack */
 		if (vret) {
-		    LOG2PC.info("COMMIT " + dt.getID() + "\n" 
-			    + dt);
+		    LOG2PC.info("COMMIT " + dt.getID() + "\n" + dt);
 		    dt.commit(vr);
 		    dt.addRes("committed");
 
 		} else {
-		    LOG2PC.info("ABORT " + dt.getID() + "\n" 
-			    + dt);
+		    LOG2PC.info("ABORT " + dt.getID() + "\n" + dt);
 		    dt.abort(vr);
 		    dt.addRes("aborted");
 
@@ -199,14 +196,14 @@ public class TManager {
 	class ConnWatcher extends Thread {
 	    Map<String, AppSvrClt>  watchee;
 
-	    public ConnWatcher (Map<String, AppSvrClt>  ass) {
+	    public ConnWatcher(Map<String, AppSvrClt>  ass) {
 		this.watchee = ass;
 
 		start();
 	    }
 
 	    public void run() {
-		while (true) {
+		for (;;) {
 		    for (Map.Entry<String, AppSvrClt> entry : 
 			    watchee.entrySet()) 
 		    {
@@ -243,7 +240,7 @@ public class TManager {
 	PrintWriter out = null;
 	BufferedReader in = null;
 
-	private TMFrontend (Socket clientSoc) {
+	private TMFrontend(Socket clientSoc) {
 	    clientSocket = clientSoc;
 	    start();
 	}
@@ -320,7 +317,7 @@ public class TManager {
 		serverSocket = new ServerSocket(svrPort); 
 
 		try { 
-		    while (true) {
+		    for (;;) {
 			System.out.println ("Listening...");
 
 			new TMFrontend (serverSocket.accept());

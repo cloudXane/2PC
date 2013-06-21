@@ -23,11 +23,11 @@ public abstract class AppServer {
      * need start termination protocol. */
     boolean startTerminator = false;
 
-    public AppServer (String n) {
+    public AppServer(String n) {
 	this(n, false);
     }
 
-    public AppServer (String n, boolean is) {
+    public AppServer(String n, boolean is) {
 	this.name = n;
 	this.isAuditer = is;
     }
@@ -44,7 +44,8 @@ public abstract class AppServer {
 	return str;
     }
 
-    /* implement the termination protocol */
+    /* TODO
+     * implement the termination protocol */
     class Terminator extends Thread {
 	public void run() {
 	}
@@ -60,7 +61,7 @@ public abstract class AppServer {
 	PrintWriter out = null;
 	BufferedReader in = null;
 
-	private DBMFrontend (Socket clientSoc) {
+	private DBMFrontend(Socket clientSoc) {
 	    clientSocket = clientSoc;
 
 	    start();
@@ -68,14 +69,16 @@ public abstract class AppServer {
 
 	/* GET decision from TM, 
 	 * but might timeout and re-ordering */
-	public boolean asDecided(List<String> plist) throws IOException {
+	public boolean asDecided(List<String> plist) 
+	    throws IOException {
 	    String inputLine, r_tid1, r_tid2;
 	    String[] tokens = null;
 
 	    try {
 		inputLine = in.readLine();
 
-		if (inputLine == null) { /* peer closed */
+		/* peer closed */
+		if (inputLine == null) { 
 		    System.err.println ("[peer closed] should get decision from TM");
 		    return false;
 		}
@@ -93,7 +96,7 @@ public abstract class AppServer {
 			+ " current tid " + r_tid2);
 
 		/* check tid to avoid re-ordering */
-		if(! r_tid1.trim().equals(r_tid2.trim()))
+		if (! r_tid1.trim().equals(r_tid2.trim()))
 		    return false;
 
 		if (tokens[1].equals(Setting.COMMIT)) {
@@ -130,7 +133,7 @@ public abstract class AppServer {
 		String inputLine;  
 		String[] tokens = null;
 
-		while (true) {
+		for (;;) {
 		    /* GET transaction parameters */
 		    if ((inputLine = in.readLine()) != null) {
 			/* System.out.println (inputLine); */
@@ -141,7 +144,7 @@ public abstract class AppServer {
 			    ArrayList<String>(Arrays.asList(tokens));
 			/* removing the parameters */
 			players.remove(0);
-			
+
 			/* process the parameters for transaction */
 			tokens = inputLine.split(Setting.theSplit);
 			/* construct sql and submit to DBMS 
@@ -233,7 +236,7 @@ public abstract class AppServer {
 		serverSocket = new ServerSocket(svrPort); 
 
 		try { 
-		    while (true) {
+		    for (;;) {
 			System.out.println ("Listening at " + svrPort);
 
 			new DBMFrontend (serverSocket.accept());

@@ -30,11 +30,11 @@ public class AppSvrClt extends Thread {
 
     VotingResult vr = null;
 
-    public AppSvrClt (String n) {
+    public AppSvrClt(String n) {
 	this(n, false);
     }
 
-    public AppSvrClt (String n, boolean is) {
+    public AppSvrClt(String n, boolean is) {
 	this.name = n;
 	this.isAuditer = is;
 	subtran = new ConcurrentLinkedQueue<String>();
@@ -77,7 +77,7 @@ public class AppSvrClt extends Thread {
 	String abt = Setting.theSplit + Setting.ABORT;
 
 	try {
-	    while(true) {
+	    for (;;) {
 		if (! subtran.isEmpty()) {
 
 		    String t = subtran.poll();
@@ -224,7 +224,7 @@ public class AppSvrClt extends Thread {
     }
 
     public void issue(String t, VotingResult vr) {
-	if(subtran.isEmpty()) {
+	if (subtran.isEmpty()) {
 	    subtran.add(t);
 
 	    this.vr = vr;

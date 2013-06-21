@@ -9,7 +9,7 @@ public class VotingResult {
 
     int workerNum;
 
-    public VotingResult (int wn) {
+    public VotingResult(int wn) {
 	this.workerNum = wn;
 
 	yes = new ArrayList<AppSvrClt>(wn);
