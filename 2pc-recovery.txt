@@ -1,0 +1,43 @@
+1. How participant handles the network failure or crash of coordinator
+
+Participant that votes YES is waiting for the decision (commit or abort) from coordinator.
+If time is run out due to network failure or crash of coordinator, this participant starts 
+termination protocol to decide to commit or abort current transaction.
+
+Termination protocol is like: 
+
+For this participant,
+it sends a DECISION-REQ message to all other participants, and waits any responses:
+    if response is ABORT, this participant writes ABORT to log and aborts current transaction;
+    if response is COMMIT, this participant writes COMMIT to log and commits current transaction;
+    if time is run out, this participant redoes this procedure, because no decision can be made 
+    unilaterally. 
+
+During this period, the decision perhaps will come from coordinator if the network is 
+repaired or the coordinator restarts.
+
+For the other participant,
+when it receives a DECISION-REQ message for some transaction, it sends response accordingly:
+    if it has COMMIT or ABORT for this transaction in log, it sends the decision;
+    if it has not voted, it votes NO and sends ABORT to the requester; 
+    if it also votes YES and waits for decision from coordinator, it does not respond.
+
+
+
+2. When participant restarts from crash, it uses the log to enter a consistent state:
+
+For the last transaction recorded in the log,
+    if there is COMMIT or ABORT for it, consistent already;
+    if there is no YES or NO, it votes NO and aborts this transaction unilaterally;
+    if there is YES and no COMMIT or ABORT, it starts termination protocol to make decision.
+
+
+
+3. When coordinator restarts from crash, it also uses the log to enter a consistent state:
+
+For the last transaction recorded in the log, there should be ABORT or COMMIT. 
+If there is no decision, it writes ABORT to log and sends ABORT to the participants.
+
+
+Actually, these three components should work together to guarantee the consistency and 
+correctness when failure occurs.

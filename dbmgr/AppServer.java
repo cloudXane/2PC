@@ -44,10 +44,19 @@ public abstract class AppServer {
 	return str;
     }
 
-    /* TODO
-     * implement the termination protocol */
-    class Terminator extends Thread {
+    class TerminatorRunner extends Thread {
 	public void run() {
+	    for (;;) {
+		if (startTerminator) {
+		    //start terminator
+		    new Terminator().sync();
+
+		    startTerminator = false;
+		} else {
+		    try{ Thread.sleep(Setting.WAITING_TIME); } 
+		    catch(Exception e) { e.printStackTrace(); }
+		}
+	    }
 	}
     }
 
