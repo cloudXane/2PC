@@ -1,0 +1,74 @@
+System Description:
+
+1. System has 3 layers:
+
+	   Client
+ LAYER-1:    |
+             |
+	-----------------------------------------------------------
+	     |
+	  request  (e.g. john, 10, boc, ccb)
+	     |
+	     |
+	  TManger (to be simple, using multi-thread model)                             
+	     |
+	     |           queue of tran               
+	     ----------->[*|*|*|*|*|*|*|*|*|*]--->  TCoordinator    
+						     split tran into sub-trans 
+						     and assign them to each 
+ LAYER-2:                                            to each AppSvr. wait 
+                                                     for VOTING results
+							 |
+		sub-trans to each AppSvr                 |
+	       -------------------------------------------
+	       |                    |                    |
+	       |                    |                    |   current system does not 
+	       |                    |                    |   support to overlap sub-trans
+	       |                    |                    |   from different dist-trans. 
+	       |                    |                    |   Thus, the queue only has
+	      [*]                  [*]                  [*]  one capacity.
+	   BOCAppSvrClt        CCBAppSvrClt        CBRCAppSvrClt
+	    (thread)             (thread)            (thread)
+	       |                    |                    |
+	-----------------------------------------------------------
+	       |                    |                    |
+ LAYER-3:      |                    |                    |
+	    BOCAppSvr           CCBAppSvr           CBRCAppSvr
+	       |                    |                    |
+	    DBWorker            DBWorker             DBWorker 
+
+
+2. To be specific 
+
+0) multiple clients can submit requests in parallel;
+1) distributed transactions are done one by one to avoid complicated Isolation issue; 
+2) Bank loss (due to network failure or host failure), and Bank restart can be tolerated; 
+3) Message re-ordering can be handled by using sequence number to keep track;
+4) termination protocol among Banks is not supported in current version, 
+   although 2PC logs are recorded.
+
+
+3. There are 2 sync point
+
+1) TCoordinator waits for AppServers to respond voting results;
+2) Client service thread waits for TCoordinator to return operation result.
+
+Time out logic is added to make system more robuts.
+
+
+4. Design Patters used to improve reusability
+
+1) 'Transfer' is encapsulated using 'Strategy Pattern';
+2) 'DBWorker' is implemented with 'Template Function Pattern';
+3) 'AppSvrClt' and 'Logger' is designed following 'Factory Pattern'; 
+
+
+5. Test 
+
+1) System is correct with all kinds of combinations of AppServers, which vote NO/YES; 
+2) System can run on one node or multiple nodes;
+3) System can tolerate Bank loss and restart, message re-ordering;
+
+TODO
+1) Termination Protocol is needed to tolerate TM loss.
+2) No large scale test has been conducted to stress the system;

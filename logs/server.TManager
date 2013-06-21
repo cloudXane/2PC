@@ -1,0 +1,12 @@
+Jun 21, 2013 11:20:57 AM server.TManager$TCoordinator execBy2PC
+INFO: START-2PC 1
+cbrc(127.0.0.1:8883)	DO [1, MV, john, 10, boc, ccb, &&&boc&&&ccb&&&cbrc]
+boc(127.0.0.1:8881)	DO [1, MVOUT, john, 10, &&&boc&&&ccb&&&cbrc]
+ccb(127.0.0.1:8882)	DO [1, MVIN, john, 10, &&&boc&&&ccb&&&cbrc]
+
+Jun 21, 2013 11:20:57 AM server.TManager$TCoordinator execBy2PC
+INFO: COMMIT 1
+cbrc(127.0.0.1:8883)	DO [1, MV, john, 10, boc, ccb, &&&boc&&&ccb&&&cbrc]
+boc(127.0.0.1:8881)	DO [1, MVOUT, john, 10, &&&boc&&&ccb&&&cbrc]
+ccb(127.0.0.1:8882)	DO [1, MVIN, john, 10, &&&boc&&&ccb&&&cbrc]
+

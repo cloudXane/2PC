@@ -1,0 +1,4 @@
+Jun 21, 2013 11:20:57 AM dbmgr.AppServer$DBMFrontend run
+INFO: YES: [1, MV, john, 10, boc, ccb]: [boc, ccb, cbrc]
+Jun 21, 2013 11:20:58 AM dbmgr.AppServer$DBMFrontend asDecided
+INFO: COMMIT: [1, MV, john, 10, boc, ccb]
